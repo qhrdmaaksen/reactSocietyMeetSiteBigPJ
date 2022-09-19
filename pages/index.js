@@ -30,6 +30,20 @@ const HomePage = (props) => {
   return <MeetupList meetups={props.meetups} />;/*props.meetups 는 아래 hetStaticProps 에 meetups 에서 온것임*/
 };
 
+//동적 렌더링
+/*
+export const getServerSideProps = (context) => {
+  /!*context 매개 변수에서 요청 객체에 접속 할 수 있고 응답 객체가 돌아온다*!/
+  const req = context.req
+  const res = context.res
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS
+    }
+  }
+}*/
+
+//정적 렌더링
 export const getStaticProps = async () => {
   /*이렇게 하면 클라이언트에서  서버 쪽으로, 정확히 하자면 빌드 프로세스 과정 쪽으로 데이터를 가져올 수 있음*/
   return {
