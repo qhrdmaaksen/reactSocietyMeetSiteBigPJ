@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
 
 const DUMMY_MEETUPS = [
@@ -19,9 +20,23 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-const HomePage = () => {
-  return (
-      <MeetupList meetups={DUMMY_MEETUPS} />
-  );
+const HomePage = (props) => {
+  /*const [loadedMeetups, setLoadedMeetups] = useState([]);
+  /!*HTTP 요청을 보내려면 이를 처리하기 위해 일반적으로 useEffect 훅을 사용*!/
+  useEffect(() => {
+    /!*promise 가 완료 상태이며 응답을 받았다고 가정, 더미데이터로*!/
+    setLoadedMeetups(DUMMY_MEETUPS);
+  }, []);*/
+  return <MeetupList meetups={props.meetups} />;/*props.meetups 는 아래 hetStaticProps 에 meetups 에서 온것임*/
+};
+
+export const getStaticProps = async () => {
+  /*이렇게 하면 클라이언트에서  서버 쪽으로, 정확히 하자면 빌드 프로세스 과정 쪽으로 데이터를 가져올 수 있음*/
+  return {
+    props: {
+      meetups:
+        DUMMY_MEETUPS /*DUMMY_MEETUPS 를 읽어 들이고 준비한 다음 이 페이지 컴포넌트에서 사용할 props 로 설정*/,
+    },
+  };
 };
 export default HomePage;
