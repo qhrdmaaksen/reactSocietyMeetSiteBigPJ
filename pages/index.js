@@ -27,7 +27,9 @@ const HomePage = (props) => {
     /!*promise 가 완료 상태이며 응답을 받았다고 가정, 더미데이터로*!/
     setLoadedMeetups(DUMMY_MEETUPS);
   }, []);*/
-  return <MeetupList meetups={props.meetups} />;/*props.meetups 는 아래 hetStaticProps 에 meetups 에서 온것임*/
+  return (
+    <MeetupList meetups={props.meetups} />
+  ); /*props.meetups 는 아래 hetStaticProps 에 meetups 에서 온것임*/
 };
 
 //동적 렌더링
@@ -52,7 +54,7 @@ export const getStaticProps = async () => {
         DUMMY_MEETUPS /*DUMMY_MEETUPS 를 읽어 들이고 준비한 다음 이 페이지 컴포넌트에서 사용할 props 로 설정*/,
     },
     revalidate: 3600 /*숫자가 필요하며 숫자는 요청이 들어올때 이 페이지를 다시 생성할때까지
-NextJS 가 대기하는 시간을 초단위로 표시하는것*/
+NextJS 가 대기하는 시간을 초단위로 표시하는것*/,
   };
 };
 export default HomePage;
