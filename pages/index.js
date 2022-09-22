@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
+import {MongoClient} from 'mongodb'
 
-const DUMMY_MEETUPS = [
+/*const DUMMY_MEETUPS = [
   {
     id: 'm1',
     title: '아름다운동해바다',
@@ -18,7 +18,7 @@ const DUMMY_MEETUPS = [
     address: '서해 해안로 5번 국도',
     description: '5조모임분들과함께멋진서해바다여행',
   },
-];
+];*/
 
 const HomePage = (props) => {
   /*const [loadedMeetups, setLoadedMeetups] = useState([]);
@@ -48,10 +48,33 @@ export const getServerSideProps = (context) => {
 //정적 렌더링
 export const getStaticProps = async () => {
   /*이렇게 하면 클라이언트에서  서버 쪽으로, 정확히 하자면 빌드 프로세스 과정 쪽으로 데이터를 가져올 수 있음*/
+  /*모든 meetups 를 불러오려면 getStaticProps 내부나 여기서 실행하는 helper function 에서
+  코드를 직접 작성해야 함 다시 말해, API 경로에 request 를 보낼 필요가 없고
+  바로 여기서 코드를 실행하면 됨 그렇지 않으면 보내질 불필요한 requests 를 추가로 작성해야 함*/
+  /*여기서 코드를 import 하면 서버에서만 실행되고 NextJS가 이를 감지하여 클라이언트 측 번들에 포함시키지 않기 때문에
+  번들 크기뿐만 아니라 보안에도 유용,즉, 서버 측 코드와 클라이언트 측 코드를 모두 import 할 수 있고
+  사용하는 위치에 따라 서로 독립적인 다른 번들에 포함 됨 NextJS에 내장된 훌륭한 기능*/
+  const client = await MongoClient.connect(
+      'mongodb+srv://vitamin777:vitamin777test@cluster0.fyhszzo.mongodb.net/meetups?retryWrites=true&w=majority'
+  )
+  const db = client.db()
+  const meetupsCollection = db.collection('meetups')
+  /*fine() method 로 해당 컬렉션에 모든 문서를 찾음
+  * -toArray() 를 붙여줘야지 문서의 배열을 다시 받을 수 있음*/
+  const meetups = await meetupsCollection.find().toArray()
+
+  client.close()
+
   return {
     props: {
       meetups:
-        DUMMY_MEETUPS /*DUMMY_MEETUPS 를 읽어 들이고 준비한 다음 이 페이지 컴포넌트에서 사용할 props 로 설정*/,
+        /*DUMMY_MEETUPS /!*DUMMY_MEETUPS 를 읽어 들이고 준비한 다음 이 페이지 컴포넌트에서 사용할 props 로 설정*!/,*/
+      meetups.map(meetup => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString() /*mongoDB id 를 문자열로 변환*/
+      }))
     },
     revalidate: 3600 /*숫자가 필요하며 숫자는 요청이 들어올때 이 페이지를 다시 생성할때까지
 NextJS 가 대기하는 시간을 초단위로 표시하는것*/,
