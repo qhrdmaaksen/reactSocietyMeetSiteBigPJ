@@ -33,7 +33,9 @@ export const getStaticPaths = async () => {
   client.close();
 
   return {
-    fallback: false /*false 로 하면 일부가 아닌 모든 meetupId value 를 포함한다*/,
+    fallback: 'blocking' /*false 로 하면 일부가 아닌 모든 meetupId value 를 포함한다
+    -true or blocking 으로하면 여기서 지정한 경로 목록이 완전하지 않을 수 있고 더 유효한 페이지가 있음을
+    nextJS 에게 알려주며 NextJS 가 바로 페이지를 찾을 수 없는 경우 404 페이지로 응답하지 않음 */,
     /*id가 있는 문서인 .map(meetup = ) 입력하여 경로는 객체의 배열이어야 하므로 { }을 입력하고
     여기 아래에 보이는 것처럼 모든 객체가 가지고 있는 params key 인 params: 을 입력하고
     그 안에 nested object 가 있으므로 meetupId: 을입력하여 meetupId 값을 정의하는 곳을 지정함
