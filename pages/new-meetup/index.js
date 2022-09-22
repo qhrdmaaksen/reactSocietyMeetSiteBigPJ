@@ -1,4 +1,6 @@
 // our-domain.com/new-meetup
+import {Fragment} from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router';
 
 import NewMeetupForm from '../../components/meetups/NewMeetupForm';
@@ -24,6 +26,14 @@ const NewMeetupPage = () => {
     /*meetup 게시글 추가 후 이동될 페이지*/
     router.push('/')
   };
-  return <NewMeetupForm onAddMeetup={addMeetupHandler} />;
+  return (
+      <Fragment>
+        <Head>
+          <title>새로운 모임 추가</title>
+          <meta name='description' content='societyMeetups site' />
+        </Head>
+      <NewMeetupForm onAddMeetup={addMeetupHandler} />;
+      </Fragment>
+  )
 };
 export default NewMeetupPage;
